@@ -654,6 +654,7 @@ function markUpdateLaneFromFiberToRoot(
   // Walk the parent path to the root and update the child expiration time.
   let node = sourceFiber;
   let parent = sourceFiber.return;
+  // 用来获取根节点对应的fiber,通过return节点
   while (parent !== null) {
     parent.childLanes = mergeLanes(parent.childLanes, lane);
     alternate = parent.alternate;
@@ -670,7 +671,7 @@ function markUpdateLaneFromFiberToRoot(
     parent = parent.return;
   }
   if (node.tag === HostRoot) {
-    const root: FiberRoot = node.stateNode;
+    const root: FiberRoot = node.stateNode;//返回根节点对应的stateNode，对应的是fiberRootNode节点，全局唯一的
     return root;
   } else {
     return null;
@@ -1046,6 +1047,7 @@ function performSyncWorkOnRoot(root) {
   const finishedWork: Fiber = (root.current.alternate: any);
   root.finishedWork = finishedWork;
   root.finishedLanes = lanes;
+  // 开始commit
   commitRoot(root);
 
   // Before exiting, make sure there's a callback scheduled for the next
@@ -1670,6 +1672,7 @@ function performUnitOfWork(unitOfWork: Fiber): void {
   unitOfWork.memoizedProps = unitOfWork.pendingProps;
   if (next === null) {
     // If this doesn't spawn new work, complete the current work.
+    // 没有下一个子节点，开始往上走
     completeUnitOfWork(unitOfWork);
   } else {
     workInProgress = next;
@@ -1903,6 +1906,7 @@ function commitRootImpl(root, renderPriorityLevel) {
     focusedInstanceHandle = prepareForCommit(root.containerInfo);
     shouldFireAfterActiveInstanceBlur = false;
 
+    // mutation之前做的事情
     commitBeforeMutationEffects(finishedWork);
 
     // We no longer need to track the active instance fiber
@@ -1915,6 +1919,7 @@ function commitRootImpl(root, renderPriorityLevel) {
     }
 
     // The next phase is the mutation phase, where we mutate the host tree.
+    // mutation阶段
     commitMutationEffects(finishedWork, root, renderPriorityLevel);
 
     if (shouldFireAfterActiveInstanceBlur) {
@@ -1980,6 +1985,7 @@ function commitRootImpl(root, renderPriorityLevel) {
       if (!rootDoesHavePassiveEffects) {
         rootDoesHavePassiveEffects = true;
         scheduleCallback(NormalSchedulerPriority, () => {
+          // useEffect
           flushPassiveEffects();
           return null;
         });
@@ -2009,6 +2015,8 @@ function commitRootImpl(root, renderPriorityLevel) {
       recordCommitTime();
     }
   }
+
+  // layout之后
 
   const rootDidHavePassiveEffects = rootDoesHavePassiveEffects;
 
@@ -2261,6 +2269,7 @@ function commitMutationEffects(
   }
 }
 
+//添加节点（ Placement ），更新节点（ Update ），删除节点（ Deletion ），还有就是一些细节的处理
 function commitMutationEffectsImpl(
   fiber: Fiber,
   root: FiberRoot,

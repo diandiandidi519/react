@@ -124,7 +124,7 @@ function FiberNode(
   this.key = key;
   this.elementType = null;
   this.type = null;
-  this.stateNode = null;
+  this.stateNode = null; //指向当前的FiberRootNode节点
 
   // Fiber
   this.return = null;

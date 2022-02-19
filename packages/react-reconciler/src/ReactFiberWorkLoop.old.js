@@ -2023,6 +2023,7 @@ function commitRootImpl(root, renderPriorityLevel) {
         }
       } else {
         try {
+          // commit之前做的事情
           commitBeforeMutationEffects();
         } catch (error) {
           invariant(nextEffect !== null, 'Should be working on an effect.');
@@ -2095,6 +2096,7 @@ function commitRootImpl(root, renderPriorityLevel) {
         }
       } else {
         try {
+          // commit
           commitLayoutEffects(root, lanes);
         } catch (error) {
           invariant(nextEffect !== null, 'Should be working on an effect.');

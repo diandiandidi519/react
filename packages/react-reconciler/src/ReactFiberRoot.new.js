@@ -30,7 +30,7 @@ function FiberRootNode(containerInfo, tag, hydrate) {
   this.tag = tag;
   this.containerInfo = containerInfo;
   this.pendingChildren = null;
-  this.current = null;
+  this.current = null; //指向这个节点对应的FiberNode节点
   this.pingCache = null;
   this.finishedWork = null;
   this.timeoutHandle = noTimeout;

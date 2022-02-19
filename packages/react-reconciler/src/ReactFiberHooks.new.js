@@ -393,6 +393,7 @@ export function renderWithHooks<Props, SecondArg>(
       // This dispatcher does that.
       ReactCurrentDispatcher.current = HooksDispatcherOnMountWithHookTypesInDEV;
     } else {
+      // ReactCurrentDispatcher.current和hooks相关
       ReactCurrentDispatcher.current = HooksDispatcherOnMountInDEV;
     }
   } else {

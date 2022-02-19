@@ -265,6 +265,7 @@ export function updateContainer(
       warnIfNotScopedWithMatchingAct(current);
     }
   }
+  // 获取优先级
   const lane = requestUpdateLane(current);
 
   if (enableSchedulingProfiler) {

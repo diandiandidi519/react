@@ -884,8 +884,10 @@ function updateClassComponent(
   }
   prepareToReadContext(workInProgress, renderLanes);
 
+  // fiber节点对应的类组件实例
   const instance = workInProgress.stateNode;
   let shouldUpdate;
+  // 首次渲染时 instance还没有创建
   if (instance === null) {
     if (current !== null) {
       // A class component without an instance only mounts if it suspended
@@ -898,7 +900,9 @@ function updateClassComponent(
       workInProgress.flags |= Placement;
     }
     // In the initial pass we might need to construct the instance.
+    //执行组件的constructor生命周期
     constructClassInstance(workInProgress, Component, nextProps);
+    // 执行getDerivedStateFromProps、componentWillMount
     mountClassInstance(workInProgress, Component, nextProps, renderLanes);
     shouldUpdate = true;
   } else if (current === null) {
@@ -1382,6 +1386,7 @@ function mountIndeterminateComponent(
   let value;
 
   if (__DEV__) {
+    // 看下这个组件原型上是否有render方法，继承Component组件
     if (
       Component.prototype &&
       typeof Component.prototype.render === 'function'
@@ -1415,6 +1420,7 @@ function mountIndeterminateComponent(
     );
     setIsRendering(false);
   } else {
+    // 函数组件
     value = renderWithHooks(
       null,
       workInProgress,
@@ -3099,6 +3105,8 @@ function beginWork(
     }
   }
 
+  // 当更新组件的时候，进行一些属性复用，
+  // mount的时候，根节点，fiberRoot也会走这里
   if (current !== null) {
     const oldProps = current.memoizedProps;
     const newProps = workInProgress.pendingProps;

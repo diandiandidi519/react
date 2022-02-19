@@ -208,6 +208,7 @@ const classComponentUpdater = {
     }
 
     enqueueUpdate(fiber, update);
+    // 开始调和
     scheduleUpdateOnFiber(fiber, lane, eventTime);
 
     if (__DEV__) {
@@ -655,6 +656,7 @@ function constructClassInstance(
     instance.state !== null && instance.state !== undefined
       ? instance.state
       : null);
+  // 添加更新方法
   adoptClassInstance(workInProgress, instance);
 
   if (__DEV__) {
@@ -815,7 +817,7 @@ function mountClassInstance(
     checkClassInstance(workInProgress, ctor, newProps);
   }
 
-  const instance = workInProgress.stateNode;
+  const instance = workInProgress.updateClassComponent;
   instance.props = newProps;
   instance.state = workInProgress.memoizedState;
   instance.refs = emptyRefsObject;
@@ -877,6 +879,7 @@ function mountClassInstance(
 
   // In order to support react-lifecycles-compat polyfilled components,
   // Unsafe lifecycles should not be invoked for components using the new APIs.
+  // 当 getDerivedStateFromProps 和 getSnapshotBeforeUpdate 不存在的时候 ，执行 componentWillMount*/
   if (
     typeof ctor.getDerivedStateFromProps !== 'function' &&
     typeof instance.getSnapshotBeforeUpdate !== 'function' &&

@@ -862,14 +862,18 @@ function ChildReconciler(shouldTrackSideEffects) {
           continue;
         }
         lastPlacedIndex = placeChild(newFiber, lastPlacedIndex, newIdx);
+        // 第一个节点
         if (previousNewFiber === null) {
           // TODO: Move out of the loop. This only happens for the first run.
           resultingFirstChild = newFiber;
         } else {
+          // 指向兄弟节点
           previousNewFiber.sibling = newFiber;
         }
+        // 来记录上一个孩子节点
         previousNewFiber = newFiber;
       }
+      // 返回第一个孩子节点
       return resultingFirstChild;
     }
 
@@ -1293,6 +1297,7 @@ function ChildReconciler(shouldTrackSideEffects) {
     if (isObject) {
       switch (newChild.$$typeof) {
         case REACT_ELEMENT_TYPE:
+          // 一个元素
           return placeSingleChild(
             reconcileSingleElement(
               returnFiber,
@@ -1325,6 +1330,7 @@ function ChildReconciler(shouldTrackSideEffects) {
       }
     }
 
+    // 文本节点
     if (typeof newChild === 'string' || typeof newChild === 'number') {
       return placeSingleChild(
         reconcileSingleTextNode(
@@ -1335,7 +1341,7 @@ function ChildReconciler(shouldTrackSideEffects) {
         ),
       );
     }
-
+    // 多个子节点
     if (isArray(newChild)) {
       return reconcileChildrenArray(
         returnFiber,
